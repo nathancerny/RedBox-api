@@ -1,12 +1,19 @@
 var http = require('http');
 var url = require('url');
+var querystring = require('querystring');
 
 function start (route, handle) { 
   http.createServer( function (request, response) {
-    var pathname = url.parse(request.url).pathname;
-    console.log("Request for " + pathname + "received");
-
-    route(handle, pathname, response);
+    var url_parts;
+    var geturl = url.parse(request.url);
+    console.log("Request for " + geturl.pathname + "received");
+    if(request.method === 'GET')  {
+      route(handle, geturl, response);
+    }else {
+      response.writeHead(200, {'Content-Type' : 'text/plain'});
+      response.write('Only Get requests try again');
+      response.end();
+    }
 
     //response.writeHead(200, {'Content-Type' : 'text/plain'});
     //response.write(content);
